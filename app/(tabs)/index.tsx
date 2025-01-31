@@ -1,74 +1,137 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
+import { SectionHeader } from '@/components/home/SectionHeader';
+import { CategoryItem } from '@/components/home/CategoryItem';
+import { RecommendedCard } from '@/components/home/RecommendedCard';
+import { BestSellerCard } from '@/components/home/BestSellerCard';
+
+// Mock data (replace with real data later)
+const categories = [
+  'Art', 'Business', 'Comedy', 'Drama', 'Education', 'Fiction', 'Health', 'History',
+  'Kids', 'Music', 'Science', 'Technology'
+];
+
+const recommendedBooks = [
+  { id: '1', imageUrl: 'https://picsum.photos/400/600' },
+  { id: '2', imageUrl: 'https://picsum.photos/400/601' },
+  { id: '3', imageUrl: 'https://picsum.photos/400/602' },
+  { id: '4', imageUrl: 'https://picsum.photos/400/603' },
+];
+
+const bestSellers = [
+  { 
+    id: '1', 
+    title: 'The Power of Habit',
+    imageUrl: 'https://picsum.photos/200/200',
+    rating: 4.8,
+    listeners: 125000
+  },
+  { 
+    id: '2', 
+    title: 'Atomic Habits: An Easy & Proven Way to Build Good Habits',
+    imageUrl: 'https://picsum.photos/200/201',
+    rating: 4.9,
+    listeners: 250000
+  },
+  { 
+    id: '3', 
+    title: 'The Psychology of Money',
+    imageUrl: 'https://picsum.photos/200/202',
+    rating: 4.7,
+    listeners: 180000
+  },
+];
 
 export default function HomeScreen() {
+  const [selectedCategory, setSelectedCategory] = useState('Art');
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ThemedView style={styles.container}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Categories Section */}
+        <SectionHeader title="Categories" />
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesContainer}
+        >
+          {categories.map((category, index) => (
+            <CategoryItem
+              key={category}
+              title={category}
+              index={index}
+              isSelected={category === selectedCategory}
+              onPress={() => setSelectedCategory(category)}
+            />
+          ))}
+        </ScrollView>
+
+        {/* Recommended Section */}
+        <View style={styles.section}>
+          <SectionHeader 
+            title="Recommended For You" 
+            showSeeMore 
+            seeMoreLink="/recommended" 
+          />
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.recommendedContainer}
+          >
+            {recommendedBooks.map((book, index) => (
+              <RecommendedCard
+                key={book.id}
+                id={book.id}
+                imageUrl={book.imageUrl}
+                index={index}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Best Sellers Section */}
+        <View style={styles.section}>
+          <SectionHeader 
+            title="Best Sellers" 
+            showSeeMore 
+            seeMoreLink="/bestsellers" 
+          />
+          <View style={styles.bestSellersContainer}>
+            {bestSellers.map((book, index) => (
+              <BestSellerCard
+                key={book.id}
+                {...book}
+                index={index}
+              />
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  scrollContent: {
+    paddingBottom: 100,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  categoriesContainer: {
+    paddingHorizontal: 16,
+  },
+  section: {
+    marginTop: 24,
+  },
+  recommendedContainer: {
+    paddingHorizontal: 16,
+  },
+  bestSellersContainer: {
+    paddingTop: 8,
   },
 });
