@@ -11,6 +11,7 @@ declare global {
       '/(tabs)/bestsellers': undefined;
       '/(tabs)/book/[id]': { id: string };
       '/settings': undefined;
+      '/(tabs)/profile': undefined;
     }
   }
 } 
