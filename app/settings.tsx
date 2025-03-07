@@ -37,6 +37,7 @@ export default function SettingsScreen() {
         style={styles.content}
       >
         {/* Add your settings content here */}
+        {/* In testing phase */}
       </Animated.View>
     </ThemedView>
   );
